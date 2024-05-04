@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chatbot de WhatsApp</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            height: 100vh;
+            background: linear-gradient(to bottom, #292b2e, #373a3d); /* Gradiente oscuro */
+        }
+        #chat-container {
+            max-width: 500px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+        }
+        #chat-messages {
+            height: 300px;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div id="chat-container" class="mt-5">
+        <div id="chat-messages"></div>
+        <form id="chat-form">
+            <div class="form-group">
+                <input type="text" id="msg" class="form-control" placeholder="Escribe un mensaje...">
+            </div>
+            <button type="submit" class="btn btn-primary">Enviar</button>
+        </form>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#chat-form').submit(function(e){
+                e.preventDefault();
+                var msg = $('#msg').val();
+                $('#chat-messages').append('<div class="mb-2 bg-light"><strong>Tú:</strong> ' + msg + '</div>');
+                $('#msg').val('');
+                
+                $.ajax({
+                    url: '/whatsapp',
+                    method: 'POST',
+                    data: {Body: msg},
+                    success: function(response){
+                        $('#chat-messages').append('<div class="mb-2"><strong class="text-primary">Bot:</strong> ' + response + '</div>');
+                        $("#chat-messages").scrollTop($("#chat-messages")[0].scrollHeight);
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
